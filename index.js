@@ -73,9 +73,9 @@ const checkSite = () => {
   .then(() => setTimeout(checkSite, MINUTE * 1000));
 };
 
-const appExit = (type) => {
+const appExit = (code) => {
   horseman.close();
-  console.info(`App is exiting. ${type}`);
+  console.info(`App is exiting ${code}`);
   return pushMsg({
     type: 'note',
     title: 'App exited',
@@ -83,8 +83,12 @@ const appExit = (type) => {
   });
 };
 
-process.on('exit', code => code || appExit('exit'));
-process.on('SIGTERM', () => appExit('SIGTERM'));
-process.on('SIGINT', () => appExit('SIGINT'));
+process.on('exit', (code) => {
+  appExit(code);
+  return code;
+});
+process.once('SIGTERM', () => process.exit(143));
+process.once('SIGINT', () => process.exit(130));
+
 
 checkSite();
