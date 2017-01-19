@@ -1,0 +1,47 @@
+{
+  "name": "allegro-check",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index",
+    "test:eslint": "eslint .",
+    "test": "npm run test:eslint; true"
+  },
+  "author": "cybuhh",
+  "contributors": [
+    {
+      "name": "cybuhh",
+      "email": "cybuhh@github.com"
+    }
+  ],
+  "keywords": [
+    "allego",
+    "check"
+  ],
+  "license": "ISC",
+  "private": true,
+  "homepage": "",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:cybuhh/allegro-check.git"
+  },
+  "bugs": {
+    "url": "https://github.com/cybuhh/allegro-check/issues"
+  },
+  "engines": {
+    "node": "7"
+  },
+  "dependencies": {
+    "redis": "^2.6.5",
+    "request": "^2.79.0",
+    "xml2js": "^0.4.17",
+    "xmldom": "^0.1.27",
+    "xpath": "0.0.23"
+  },
+  "devDependencies": {
+    "eslint": "^3.10.2",
+    "eslint-config-airbnb-base": "^10.0.1",
+    "eslint-plugin-import": "^2.2.0"
+  }
+}
