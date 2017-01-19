@@ -5,12 +5,14 @@ const promise = require('./promise');
 const xpath = require('xpath');
 const Dom = require('xmldom').DOMParser;
 const crypto = require('crypto');
+const Horseman = require('node-horseman');
+const horseman = new Horseman({ bluebirdDebug: true });
 
 const hash = data => (
   crypto.createHash('md5')
   .update(data, 'utf8')
   .digest('hex')
-)
+);
 
 const redis = require('./redis')(process.env.REDIS_URL, 'allegro');
 
@@ -34,12 +36,13 @@ const pushMsg = body => (
 const checkSite = () => {
   console.info(`Fetching ${process.env.REQUEST_URL}`);
 
-  return promise(null, request)({
-    url: process.env.REQUEST_URL,
-  })
+  return horseman.open(process.env.REQUEST_URL)
+  .status()
+  .waitForSelector('.listing-wrapper')
+  .html()
   .then((response) => {
     console.info('Processing response');
-    const doc = new Dom({ errorHandler: () => false }).parseFromString(response.body);
+    const doc = new Dom({ errorHandler: () => false }).parseFromString(response);
     return Promise.all(xpath.select('//*[@class="offer-title"]', doc).map((item) => {
       const key = hash(item.getAttribute('href'));
       return redis.get(key)
@@ -66,11 +69,13 @@ const checkSite = () => {
     }
     return false;
   })
+  .then()
   .then(() => setTimeout(checkSite, MINUTE * 1000))
   .catch(console.error);
 };
 
 const appExit = (type) => {
+  horseman.close();
   console.info(`App is exiting. ${type}`);
   return pushMsg({
     type: 'note',
