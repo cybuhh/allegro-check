@@ -71,7 +71,10 @@ const checkSite = () => {
   })
   .then()
   .then(() => setTimeout(checkSite, MINUTE * 1000))
-  .catch(console.error);
+  .catch((error) => {
+    console.error(error);
+    setTimeout(checkSite, MINUTE * 1000);
+  });
 };
 
 const appExit = (type) => {
